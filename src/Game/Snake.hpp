@@ -26,4 +26,5 @@ private:
     int screenHeight;
     int screenWidth;
     void generateFood();
+    bool changed;
 };

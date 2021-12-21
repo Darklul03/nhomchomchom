@@ -7,6 +7,7 @@ Snake::Snake() {
     screenHeight = 768;
     generateFood();
     dir = direction::East;
+    changed = false;
 }
 
 void Snake::generateFood() {
@@ -52,6 +53,8 @@ void Snake::Advance() {
         generateFood();
     else
         segment.pop_back();
+
+    changed = false;
 }
 
 void Snake::SetDirection(direction nextdir) {
@@ -59,6 +62,8 @@ void Snake::SetDirection(direction nextdir) {
         dir = nextdir;
         return;
     }
+    if (changed) return;
+
     switch (dir) {
     case direction::East:
         if (nextdir == direction::West) return;
@@ -77,4 +82,5 @@ void Snake::SetDirection(direction nextdir) {
         break;
     }
     dir = nextdir;
+    changed = true;
 }
