@@ -15,9 +15,11 @@ void Snake::generateFood() {
     int w = screenWidth/64;
     int h = screenHeight/64;
     std::mt19937 gen(time(0));
+    std::uniform_int_distribution randx(0,w-1);
+    std::uniform_int_distribution randy(0,h-1);
     do {
-        Food.x = gen()%w;
-        Food.y = gen()%h;
+        Food.x = randx(gen);
+        Food.y = randy(gen);
         finish = true;
         for (auto [x,y] : segment) {
             if (Food.x == x && Food.y == y) {
