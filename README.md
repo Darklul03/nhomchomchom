@@ -1,6 +1,7 @@
 # nhomchomchom
 
-game con rắn
+game con rắn  
+Sprites from: https://github.com/rembound/Snake-Game-HTML5
 
 ## Dependancies
 

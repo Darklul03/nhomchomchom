@@ -5,12 +5,12 @@ Snake::Snake() {
     segment.push_back({0,0});
     screenWidth = 1280;
     screenHeight = 768;
-    generateFood();
-    dir = direction::East;
+    segmentDir.push_back(direction::East);
     changed = false;
+    GenerateFood();
 }
 
-void Snake::generateFood() {
+void Snake::GenerateFood() {
     bool finish = false;
     int w = screenWidth/64;
     int h = screenHeight/64;
@@ -33,6 +33,7 @@ void Snake::generateFood() {
 }   
 
 void Snake::Advance() {
+    direction dir = segmentDir.front();
     int dx[] = {0,1,-1,0,0};
     int dy[] = {0,0,0,1,-1};
 
@@ -51,15 +52,19 @@ void Snake::Advance() {
         }
 
     segment.push_front(Head);
+    segmentDir.push_front(dir);
     if (Head == Food)
-        generateFood();
-    else
+        GenerateFood();
+    else {
         segment.pop_back();
+        segmentDir.pop_back();
+    }
 
     changed = false;
 }
 
 void Snake::SetDirection(direction nextdir) {
+    direction &dir = segmentDir.front();
     if (segment.size() == 1) {
         dir = nextdir;
         return;

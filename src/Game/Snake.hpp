@@ -19,12 +19,12 @@ public:
     void SetDirection(direction nextdir);
     bool alive;
     std::deque<Node> segment;
-    direction dir;
+    std::deque<direction> segmentDir;
     Node Food;
 
 private:
     int screenHeight;
     int screenWidth;
-    void generateFood();
+    void GenerateFood();
     bool changed;
 };
