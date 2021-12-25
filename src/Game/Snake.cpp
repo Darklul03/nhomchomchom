@@ -26,8 +26,6 @@ void Snake::GenerateFood() {
                 finish = false;
                 break;
             }
-        if (Food.x < 0 || Food.y < 0 || Food.x >= w || Food.y >= h)
-            finish = false;
         }
     } while (!finish);
 }   
