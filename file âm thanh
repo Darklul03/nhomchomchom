@@ -1,0 +1,82 @@
+#include <SDL.h>
+#include <SDL_mixer.h>
+//Đường dẫn ở dưới đúng ra là $(SolutionDir)/(Tên nhạc...) nhưng mà không chạy được nên khi cài lên máy khác thì phải sửa đường dãn.
+#define WAV_PATH1 "C:/Users/admin/source/repos/SoundPatchv0.0.2/Bite1.wav"//Rắn ăn mồi//file hiệu ứng để .wav
+#define WAV_PATH2 "C:/Users/admin/source/repos/SoundPatchv0.0.2/BonkSoundEffectHD.wav"//Đâm vào vật cản
+#define WAV_PATH3 "C:/Users/admin/source/repos/SoundPatchv0.0.2/Cartoonpunchsoundeffect.wav"//Đâm vào đuôi
+#define MUS_PATH1 "C:/Users/admin/source/repos/SoundPatchv0.0.2/The-ABC-Song-_Piano-Version_-Sayuri-Hayashi-Egnell.ogg"//Chế độ dễ //file âm thanh để ./ogg
+#define MUS_PATH2 "C:/Users/admin/source/repos/SoundPatchv0.0.2/Mint-Condition-Margareta.ogg"//Chế độ thường
+#define MUS_PATH3 "C:/Users/admin/source/repos/SoundPatchv0.0.2/Goth-Christmas-par.ogg"//Chế độ khó
+
+//File hiệu ứng âm thanh
+Mix_Chunk* effect1 = NULL;
+Mix_Chunk* effect2 = NULL;
+Mix_Chunk* effect3 = NULL;
+
+//File âm nhạc
+Mix_Music* music1 = NULL;
+Mix_Music* music2 = NULL;
+Mix_Music* music3 = NULL;
+
+
+int main(int argc, char* argv[]) {
+
+	// Khởi tạo SDL.
+	if (SDL_Init(SDL_INIT_AUDIO) < 0)
+		return -1;
+
+	//Khởi tạo SDL_mixer
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+		return -1;
+
+	// Tải hiệu ứng âm thanh
+	effect1 = Mix_LoadWAV(WAV_PATH1);
+	if (effect1 == NULL)
+		return -1;
+	effect2 = Mix_LoadWAV(WAV_PATH2);
+	if (effect2 == NULL)
+		return -1;
+	effect3 = Mix_LoadWAV(WAV_PATH3);
+	if (effect3 == NULL)
+		return -1;
+
+	// Tải âm nhạc
+	music1 = Mix_LoadMUS(MUS_PATH1);
+	if (music1 == NULL)
+		return -1;
+	music2 = Mix_LoadMUS(MUS_PATH2);
+	if (music2 == NULL)
+		return -1;
+	music3 = Mix_LoadMUS(MUS_PATH3);
+	if (music3 == NULL)
+		return -1;
+	//Thông báo lỗi không load được file
+	if (Mix_PlayChannel(-1, effect1, 0) == -1)
+		return -1;
+	if (Mix_PlayChannel(-1, effect2, 0) == -1)
+		return -1;
+	if (Mix_PlayChannel(-1, effect3, 0) == -1)
+		return -1;
+
+	if (Mix_PlayMusic(music1, -1) == -1)
+		return -1;
+	if (Mix_PlayMusic(music2, -1) == -1)
+		return -1;
+	if (Mix_PlayMusic(music3, -1) == -1)
+		return -1;
+
+	while (Mix_PlayingMusic());
+
+	// clean up our resources
+	Mix_FreeChunk(effect1);
+	Mix_FreeChunk(effect2);
+	Mix_FreeChunk(effect3);
+	Mix_FreeMusic(music1);
+	Mix_FreeMusic(music2);
+	Mix_FreeMusic(music3);
+
+	// quit SDL_mixer
+	Mix_CloseAudio();
+
+	return 0;
+}
