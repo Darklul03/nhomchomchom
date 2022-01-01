@@ -20,7 +20,7 @@ void MainGame::initSystem() {
 }
 
 void MainGame::initTexture() {
-    SDL_Surface *surface = SDL_LoadBMP("snake.bmp");
+    SDL_Surface *surface = SDL_LoadBMP("resource/image/snake.bmp");
     sprites = SDL_CreateTextureFromSurface(renderer,surface);
     SDL_FreeSurface(surface);
 }
@@ -34,6 +34,8 @@ void MainGame::run() {
         before = SDL_GetTicks();
         if (counter == 0) {
             snake.Advance();
+            if (!snake.alive)
+                return;
             draw();
         }
         changeDir();
@@ -88,7 +90,7 @@ void MainGame::draw() {
     for (int i = 0; i < snake.segment.size(); i++) {
         Node seg = snake.segment[i];
         direction currentDir = snake.segmentDir[i];
-        SDL_Rect dest = {seg.x*64, seg.y*64, 64, 64};
+        SDL_Rect dest = {seg.x*TILESIZE, seg.y*TILESIZE, TILESIZE, TILESIZE};
         SDL_Rect src = {0,0,64,64};
         if (seg == snake.segment.front()) {
             if (currentDir == direction::East)
@@ -138,7 +140,7 @@ void MainGame::draw() {
         SDL_RenderCopy(renderer,sprites,&src,&dest);
     }
 
-    SDL_Rect dest = {snake.Food.x*64, snake.Food.y*64, 64, 64};
+    SDL_Rect dest = {snake.Food.x*TILESIZE, snake.Food.y*TILESIZE, TILESIZE, TILESIZE};
     SDL_Rect src = {0,64*3,64,64};
     SDL_RenderCopy(renderer,sprites,&src,&dest);
     SDL_RenderPresent(renderer);

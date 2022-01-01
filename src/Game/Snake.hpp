@@ -2,6 +2,7 @@
 #include <deque>
 #include <iostream>
 #include <SDL2/SDL.h>
+#define TILESIZE 64
 
 enum class direction {Stop, East, West, South, North};
 struct Node {

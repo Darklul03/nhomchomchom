@@ -3,8 +3,10 @@
 Snake::Snake() {
     alive = true;
     segment.push_back({0,0});
+    segment.push_back({0,1});
     screenWidth = 1280;
     screenHeight = 768;
+    segmentDir.push_back(direction::East);
     segmentDir.push_back(direction::East);
     changed = false;
     GenerateFood();
@@ -12,8 +14,8 @@ Snake::Snake() {
 
 void Snake::GenerateFood() {
     bool finish = false;
-    int w = screenWidth/64;
-    int h = screenHeight/64;
+    int w = screenWidth/TILESIZE;
+    int h = screenHeight/TILESIZE;
     std::mt19937 gen(time(0));
     std::uniform_int_distribution randx(0,w-1);
     std::uniform_int_distribution randy(0,h-1);
@@ -35,19 +37,22 @@ void Snake::Advance() {
     int dx[] = {0,1,-1,0,0};
     int dy[] = {0,0,0,1,-1};
 
-    int w = screenWidth/64;
-    int h = screenHeight/64;
+    int w = screenWidth/TILESIZE;
+    int h = screenHeight/TILESIZE;
 
     Node Head = segment.front();
     Head.x = (Head.x + dx[static_cast<int>(dir)]) % w;
     Head.y = (Head.y + dy[static_cast<int>(dir)]) % h;
     if (Head.x < 0) Head.x += w;
     if (Head.y < 0) Head.y += h;
-    for (auto seg : segment)
+    for (auto seg : segment) {
+        if (seg == segment.back())
+            continue;
         if (Head == seg) {
             alive = false;  
             break;
         }
+    }
 
     segment.push_front(Head);
     segmentDir.push_front(dir);
