@@ -1,7 +1,6 @@
 #pragma once
 #include <deque>
 #include <iostream>
-#include <SDL2/SDL.h>
 #define TILESIZE 64
 
 enum class direction {Stop, East, West, South, North};
@@ -26,6 +25,8 @@ public:
 private:
     int screenHeight;
     int screenWidth;
+    int w;
+    int h;
     void GenerateFood();
     bool changed;
 };
