@@ -5,13 +5,17 @@ MainGame::MainGame() {
     renderer = nullptr;
     screenWidth = 1280, screenHeight = 768;
     counter = 0;
-    state = 0;
+    highScore = 0;
+    state = Title;
+    running = true;
+    paused = false;
 }
 
 void MainGame::cleanup() {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     TTF_CloseFont(font48);
+    TTF_CloseFont(font90);
     TTF_Quit();
     SDL_Quit();
 };
@@ -53,9 +57,16 @@ void MainGame::initSystem() {
 }
 
 void MainGame::initResource() {
+    font48 = TTF_OpenFont("resource/font/font.ttf", 48);
+    font90 = TTF_OpenFont("resource/font/font.ttf", 90);
+    
     sprites = loadTexture("resource/image/snake.bmp");
     endOverlay = loadTexture("resource/image/end.png");
-    font48 = TTF_OpenFont("resource/font/font.ttf", 48);
+    bg = loadTexture("resource/image/bg.png");
+    click2start = loadTexture("resource/image/click2start.png");
+    continueButton = loadTexture("resource/image/pause-continue.png");
+    retryButton = loadTexture("resource/image/pause-retry.png");
+    quitButton = loadTexture("resource/image/pause-back.png");
 }
 
 void MainGame::renderFontCenter(int x, int y, const char* text, TTF_Font* font, SDL_Color textcolor) {
@@ -70,40 +81,134 @@ void MainGame::renderFontCenter(int x, int y, const char* text, TTF_Font* font, 
     SDL_DestroyTexture(message);
 }
 
-void MainGame::run() {
-    initSystem();
-    initResource();
-    unsigned int before, after;
+void MainGame::titlescreen() {
+    SDL_RenderClear(renderer);
+    renderTexture(0, 0, bg);
+    renderTexture(0, 0, click2start);
+    renderFontCenter(0, -120, "SNAKE", font90, black);
+    renderFontCenter(0, 384 - 16*13 + 4 - 3, "LEFT CLICK TO START", font48, black);
+    renderFontCenter(0, 384 - 16*13 + 4, "LEFT CLICK TO START", font48, white);
 
-    while (snake.alive) {
-        before = SDL_GetTicks();
-        if (counter == 0) {
-            snake.Advance();
-            // if (!snake.alive)
-            //     return;
-            draw();
+    if (SDL_PollEvent(&event)) {
+        switch(event.type) {
+        case SDL_QUIT:
+            running = false;
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                state = Game;
+            }
+            break;
         }
-        changeDir();
-
-        after = SDL_GetTicks();
-        unsigned int time = after - before;
-        if (FRAME_RATE > time)
-            SDL_Delay(FRAME_RATE-time);
-
-        counter = (counter+1)%10;
-    }
-
-    renderTexture(0,0,endOverlay);
-    renderFontCenter(0, 0, "YOU DIED", font48, white);
+	}
     SDL_RenderPresent(renderer);
-    SDL_Delay(2000);
 }
 
-void MainGame::changeDir() {
-    SDL_Event event;
+void MainGame::pause() {
+    renderTexture(441, 160, continueButton);
+    renderTexture(441, 320, retryButton);
+    renderTexture(441, 480, quitButton);
+    SDL_RenderPresent(renderer);
+
     if (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT)
-            snake.alive = false;
+        switch(event.type) {
+        case SDL_QUIT:
+            running = false;
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                int x = event.button.x;
+                int y = event.button.y;
+                if ((x > 441) && (x < 441+398) && (y > 160) && (y < 160+116)) {
+                    paused = !paused;
+                    state = Game;
+                }
+                if ((x > 441) && (x < 441+398) && (y > 320) && (y < 320+116)) {
+                    snake.newSnake();
+                    paused = !paused;
+                    state = Game;
+                }
+                if ((x > 441) && (x < 441+398) && (y > 480) && (y < 480+116))
+                    running = false;
+            }
+            break;
+        
+        case SDL_KEYUP:
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                if (paused)
+                    state = Game;
+                paused = !paused;
+            }
+            break;
+        }
+    }
+}
+
+void MainGame::end() {
+    if (snake.segment.size() == (screenWidth/TILESIZE)*(screenHeight/TILESIZE-1))
+        renderFontCenter(0, -240, "YOU WIN", font48, white);
+    else
+        renderFontCenter(0, -240, "YOU DIED", font48, white);
+
+    int score = (snake.segment.size()-2)*100;
+    if (score > highScore) {
+        std::string s = std::to_string(score);
+        s = "NEW HIGH SCORE: " + s;
+        renderFontCenter(0, -160, s.c_str(), font48, white);
+    }
+    else {
+        std::string s = std::to_string(score);
+        std::string hs = "HIGH SCORE: " + std::to_string(highScore);
+        s = "SCORE: " + s;
+        renderFontCenter(0, -120, hs.c_str(), font48, white);
+        renderFontCenter(0, -160, s.c_str(), font48, white);
+    }
+
+    renderTexture(441, 320, retryButton);
+    renderTexture(441, 480, quitButton);
+
+    if (SDL_PollEvent(&event)) {
+        switch(event.type) {
+        case SDL_QUIT:
+            running = false;
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                int x = event.button.x;
+                int y = event.button.y;
+                if ((x > 441) && (x < 441+398) && (y > 320) && (y < 320+116)) {
+                    highScore = score;
+                    snake.newSnake();
+                    state = Game;
+                }
+                if ((x > 441) && (x < 441+398) && (y > 480) && (y < 480+116))
+                    running = false;
+            }
+            break;
+        }
+    }
+
+    SDL_RenderPresent(renderer);
+}
+
+void MainGame::update() {
+    if (counter == 0) {
+        snake.Advance();
+        draw();
+        if (snake.alive == false) {
+            renderTexture(0, 0, endOverlay);
+            state = End;
+        }
+    }
+
+    if (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            running = false;
+            return;
+        }
 
         if (event.type = SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
@@ -124,33 +229,52 @@ void MainGame::changeDir() {
                 break;
 
             case SDLK_ESCAPE:
-                snake.alive = false;
-
-            default:
+                renderTexture(0, 0, endOverlay);
+                state = Pause;
                 break;
             }
         }
     }
+
+    counter = (counter+1)%10;
+}
+
+void MainGame::run() {
+    initSystem();
+    initResource();
+
+    while (running) {
+        unsigned int time;
+        time = SDL_GetTicks();
+
+        if (state == Title)
+            titlescreen();
+        if (state == Game)
+            update();
+        if (state == Pause)
+            pause();
+        if (state == End)
+            end();
+
+        time = SDL_GetTicks() - time;
+        if (FRAME_RATE > time)
+            SDL_Delay(FRAME_RATE-time);
+    }
 }
 
 void MainGame::renderScore() {
-    Uint8 r,g,b,a;
-    SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
-
     SDL_Rect rect = {0, screenHeight-TILESIZE, screenWidth, TILESIZE};
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
     SDL_RenderFillRect(renderer, &rect);
 
     int score = (snake.segment.size() - 2)*100;
-    std::string s = "Score: " + std::to_string(score);
+    std::string s = "SCORE: " + std::to_string(score);
     renderFontCenter(0, screenHeight/2-TILESIZE/2, s.c_str(), font48, white);
-    SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 
 void MainGame::draw() {
     if (snake.alive == false) return;
-    SDL_SetRenderDrawColor(renderer, 0xf7, 0xe6, 0x97, 0x80); // background color
     SDL_RenderClear(renderer);
+    renderTexture(0, 0, bg);
 
     for (int i = 0; i < snake.segment.size(); i++) {
         Node seg = snake.segment[i];

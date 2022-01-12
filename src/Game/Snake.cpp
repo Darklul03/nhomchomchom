@@ -1,13 +1,19 @@
 #include "Snake.hpp"
 #include <random>
 Snake::Snake() {
-    alive = true;
-    segment.push_back({0,0});
-    segment.push_back({0,1});
     screenWidth = 1280;
     screenHeight = 768;
     w = screenWidth/TILESIZE;
     h = screenHeight/TILESIZE-1;
+    newSnake();
+}
+
+void Snake::newSnake() {
+    alive = true;
+    segment.clear();
+    segmentDir.clear();
+    segment.push_back({0,0});
+    segment.push_back({0,1});
     segmentDir.push_back(direction::East);
     segmentDir.push_back(direction::East);
     changed = false;
