@@ -1,10 +1,18 @@
 #include "Snake.hpp"
 #include <random>
 Snake::Snake() {
+    w = screenWidth/TILESIZE;
+    h = screenHeight/TILESIZE-1;
+    newSnake();
+}
+
+void Snake::newSnake() {
     alive = true;
+    segment.clear();
+    segmentDir.clear();
     segment.push_back({0,0});
-    screenWidth = 1280;
-    screenHeight = 768;
+    segment.push_back({0,1});
+    segmentDir.push_back(direction::East);
     segmentDir.push_back(direction::East);
     changed = false;
     GenerateFood();
@@ -12,8 +20,6 @@ Snake::Snake() {
 
 void Snake::GenerateFood() {
     bool finish = false;
-    int w = screenWidth/64;
-    int h = screenHeight/64;
     std::mt19937 gen(time(0));
     std::uniform_int_distribution randx(0,w-1);
     std::uniform_int_distribution randy(0,h-1);
@@ -21,33 +27,33 @@ void Snake::GenerateFood() {
         Food.x = randx(gen);
         Food.y = randy(gen);
         finish = true;
-        for (auto [x,y] : segment) {
-            if (Food.x == x && Food.y == y) {
+        for (Node i : segment) {
+            if (Food == i) {
                 finish = false;
                 break;
             }
         }
     } while (!finish);
-}   
+}
 
 void Snake::Advance() {
     direction dir = segmentDir.front();
     int dx[] = {0,1,-1,0,0};
     int dy[] = {0,0,0,1,-1};
 
-    int w = screenWidth/64;
-    int h = screenHeight/64;
-
     Node Head = segment.front();
     Head.x = (Head.x + dx[static_cast<int>(dir)]) % w;
     Head.y = (Head.y + dy[static_cast<int>(dir)]) % h;
     if (Head.x < 0) Head.x += w;
     if (Head.y < 0) Head.y += h;
-    for (auto seg : segment)
+    for (auto seg : segment) {
+        if (seg == segment.back())
+            continue;
         if (Head == seg) {
-            alive = false;  
+            alive = false;
             break;
         }
+    }
 
     segment.push_front(Head);
     segmentDir.push_front(dir);
