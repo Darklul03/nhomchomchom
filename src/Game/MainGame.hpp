@@ -28,7 +28,6 @@ private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
-    int screenWidth, screenHeight;
     static const int FRAME_RATE = 1000/60;
     Snake snake;
     int counter;

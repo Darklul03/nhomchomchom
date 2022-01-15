@@ -3,7 +3,6 @@
 MainGame::MainGame() {
     window = nullptr;
     renderer = nullptr;
-    screenWidth = 1280, screenHeight = 768;
     counter = 0;
     highScore = 0;
     state = Title;
@@ -198,6 +197,7 @@ void MainGame::update() {
         if (snake.alive == false) {
             renderTexture(0, 0, endOverlay);
             state = End;
+            return;
         }
     }
 

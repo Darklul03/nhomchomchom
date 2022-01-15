@@ -2,6 +2,8 @@
 #include <deque>
 #include <iostream>
 #define TILESIZE 64
+#define screenWidth 1280
+#define screenHeight 768
 
 enum class direction {Stop, East, West, South, North};
 struct Node {
@@ -25,8 +27,6 @@ public:
     Node Food;
 
 private:
-    int screenHeight;
-    int screenWidth;
     int w;
     int h;
     void GenerateFood();

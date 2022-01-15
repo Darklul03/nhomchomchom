@@ -1,8 +1,6 @@
 #include "Snake.hpp"
 #include <random>
 Snake::Snake() {
-    screenWidth = 1280;
-    screenHeight = 768;
     w = screenWidth/TILESIZE;
     h = screenHeight/TILESIZE-1;
     newSnake();
