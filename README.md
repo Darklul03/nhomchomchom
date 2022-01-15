@@ -1,16 +1,21 @@
-# nhomchomchom
+# Đồ án cuối kỳ KNNN
 
-game con rắn  
-Sprites from: https://github.com/rembound/Snake-Game-HTML5
+## Tên nhóm: Blyatiful
 
-## Dependancies
+## Thành viên
+* 21521948 Phạm Tiến Đạt
+* 21522078 Trịnh Nhân Hiếu
+* 21521050 Huỳnh Phạm Đức Lâm
+* 21522592 Nguyễn Trần Hội Thắng
+* 21521641 Đỗ Phi Tuấn
 
-* Make: [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++: Recommend [MinGW](https://www.mingw-w64.org/)
-* SDL2: Included in the repo
+## Điều khiển
+* ↑: Đi lên
+* ↓: Đi xuống
+* ←: Sang trái
+* →: Sang phải
+* Esc: Tạm dừng
 
-## Installation
-
-1. Clone the repo
-2. Compile: `make`
-3. Run: `.\bin\main`
+## Hướng dẫn
+* Điều khiển rắn để ăn mồi trong khi tránh va chạm với bản thân
+* Có thể đi ra viền để xuất hiện ở viền ngược lại
