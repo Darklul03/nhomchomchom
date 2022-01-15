@@ -22,30 +22,27 @@ void MainGame::cleanup() {
 
 SDL_Texture* MainGame::loadTexture(const char* filePath) {
     SDL_Texture* texture = NULL;
-	texture = IMG_LoadTexture(renderer, filePath);
+    texture = IMG_LoadTexture(renderer, filePath);
 
-	if (texture == NULL)
-		std::cout << "Failed to load texture. Error: " << SDL_GetError() << std::endl;
-
-	return texture;
+    return texture;
 }
 
 void MainGame::renderTexture(int x, int y, SDL_Texture* tex) {
     SDL_Rect src; 
-	src.x = 0;
-	src.y = 0;
-	src.w;
-	src.h;
+    src.x = 0;
+    src.y = 0;
+    src.w;
+    src.h;
 
-	SDL_QueryTexture(tex, NULL, NULL, &src.w, &src.h);
+    SDL_QueryTexture(tex, NULL, NULL, &src.w, &src.h);
 
-	SDL_Rect dst;
-	dst.x = x;
-	dst.y = y;
-	dst.w = src.w;
-	dst.h = src.h;
+    SDL_Rect dst;
+    dst.x = x;
+    dst.y = y;
+    dst.w = src.w;
+    dst.h = src.h;
 
-	SDL_RenderCopy(renderer, tex, &src, &dst);
+    SDL_RenderCopy(renderer, tex, &src, &dst);
 }
 
 void MainGame::initSystem() {
@@ -59,7 +56,7 @@ void MainGame::initSystem() {
 void MainGame::initResource() {
     font48 = TTF_OpenFont("resource/font/font.ttf", 48);
     font90 = TTF_OpenFont("resource/font/font.ttf", 90);
-    
+
     sprites = loadTexture("resource/image/snake.bmp");
     endOverlay = loadTexture("resource/image/end.png");
     bg = loadTexture("resource/image/bg.png");
@@ -101,7 +98,7 @@ void MainGame::titlescreen() {
             }
             break;
         }
-	}
+    }
     SDL_RenderPresent(renderer);
 }
 
@@ -134,7 +131,7 @@ void MainGame::pause() {
                     running = false;
             }
             break;
-        
+
         case SDL_KEYUP:
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 if (paused)

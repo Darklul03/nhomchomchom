@@ -29,14 +29,14 @@ void Snake::GenerateFood() {
         Food.x = randx(gen);
         Food.y = randy(gen);
         finish = true;
-        for (auto [x,y] : segment) {
-            if (Food.x == x && Food.y == y) {
+        for (Node i : segment) {
+            if (Food == i) {
                 finish = false;
                 break;
             }
         }
     } while (!finish);
-}   
+}
 
 void Snake::Advance() {
     direction dir = segmentDir.front();
@@ -52,7 +52,7 @@ void Snake::Advance() {
         if (seg == segment.back())
             continue;
         if (Head == seg) {
-            alive = false;  
+            alive = false;
             break;
         }
     }

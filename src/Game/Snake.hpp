@@ -7,6 +7,7 @@ enum class direction {Stop, East, West, South, North};
 struct Node {
     int x;
     int y;
+
     bool operator == (Node a) {
         return (this->x == a.x) && (this->y == a.y);
     }
