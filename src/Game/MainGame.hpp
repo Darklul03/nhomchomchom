@@ -14,6 +14,7 @@ public:
     MainGame();
     void run();
     void titlescreen();
+    void update();
     void pause();
     void end();
     void cleanup();
@@ -23,7 +24,6 @@ private:
     void initResource();
     SDL_Texture* loadTexture(const char* filePath);
     void renderScore();
-    void update();
     void draw();
     SDL_Window* window;
     SDL_Renderer* renderer;

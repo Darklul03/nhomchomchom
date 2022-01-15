@@ -1,5 +1,6 @@
 #include "Snake.hpp"
 #include <random>
+
 Snake::Snake() {
     w = screenWidth/TILESIZE;
     h = screenHeight/TILESIZE-1;
@@ -38,8 +39,8 @@ void Snake::GenerateFood() {
 
 void Snake::Advance() {
     direction dir = segmentDir.front();
-    int dx[] = {0,1,-1,0,0};
-    int dy[] = {0,0,0,1,-1};
+    int dx[] = {1,-1,0,0};
+    int dy[] = {0,0,1,-1};
 
     Node Head = segment.front();
     Head.x = (Head.x + dx[static_cast<int>(dir)]) % w;

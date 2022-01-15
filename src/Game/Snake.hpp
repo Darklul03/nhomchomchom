@@ -1,11 +1,10 @@
 #pragma once
 #include <deque>
-#include <iostream>
 #define TILESIZE 64
 #define screenWidth 1280
 #define screenHeight 768
 
-enum class direction {Stop, East, West, South, North};
+enum class direction {East, West, South, North};
 struct Node {
     int x;
     int y;
